@@ -1,0 +1,25 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f3f3f3;
+  z-index: 999;
+  margin-left: 20rem;
+  padding: 20px;
+}
+input {
+  padding: 12px 20px;
+  border: none;
+  background-color: #f7f6f6;
+  outline: none;
+  border-radius: 5px;
+  margin-right: 20px;
+  width: 14rem;
+  position: relative;
+}
+.nav-icons {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 2rem;
+  color: #494949;
+}
