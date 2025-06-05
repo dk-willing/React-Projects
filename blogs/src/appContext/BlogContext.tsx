@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 import type { Blog } from "../types/BlogType";
 
 interface BlogType {
@@ -8,7 +8,7 @@ interface BlogType {
   deleteBlog: (id: number) => void;
 }
 
-const BlogContextProps = createContext<BlogType | undefined>(undefined);
+const BlogContext = createContext<BlogType | undefined>(undefined);
 
 export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -17,28 +17,34 @@ export const BlogProvider = ({ children }: { children: React.ReactNode }) => {
     setBlogs([...blogs, blog]);
   }
 
-  function updateBlog(update: Blog) {
-    setBlogs(blogs.map((blog) => (blog.id === update.id ? update : blog)));
+  function updateBlog(updateBlog: Blog) {
+    setBlogs(
+      blogs.map((blog) => (blog.id === updateBlog.id ? updateBlog : blog))
+    );
   }
 
   function deleteBlog(id: number) {
-    setBlogs(blogs.filter((blog) => blog.id !== id));
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this Blog?"
+    );
+    if (confirmed) {
+      setBlogs(blogs.filter((blog) => blog.id !== id));
+    }
   }
 
+  // Anytime you want to provide a context, use the Context you created
   return (
-    <BlogContextProps.Provider
-      value={{ blogs, addBlog, deleteBlog, updateBlog }}
-    >
+    <BlogContext.Provider value={{ blogs, addBlog, updateBlog, deleteBlog }}>
       {children}
-    </BlogContextProps.Provider>
+    </BlogContext.Provider>
   );
 };
 
 export const useBlogs = () => {
-  const context = useContext(BlogContextProps);
+  const context = useContext(BlogContext);
 
   if (!context) {
-    throw new Error("Context must be used within a BlogProvider");
+    throw new Error("Context must be used in a BlogProvider");
   }
 
   return context;

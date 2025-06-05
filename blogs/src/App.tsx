@@ -5,29 +5,22 @@ import TrendList from "./posts/TrendList";
 import TopicList from "./posts/TopicList";
 import { BlogProvider } from "./appContext/BlogContext";
 import { IoAddCircle } from "react-icons/io5";
-import { Blog } from "./types/BlogType";
+import type { Blog } from "./types/BlogType";
+import Modal from "./modal-component/Modal";
+import BlogForm from "./modal-component/BlogForm";
+import ArticleList from "./posts/ArticleList";
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
-
-  // Temporal Variable
-
-  const blog = {
-    id: 2,
-    title: "This must be deleted",
-    description: "This would be deleted",
-    image: "https://something.com",
-    time: "3:00am",
-  };
 
   function openModalForNewBlog() {
     setIsModalOpen(true);
     setEditingBlog(null);
   }
 
-  function openModalForEdit() {
-    setIsModalOpen(false);
+  function openModalForEdit(blog: Blog) {
+    setIsModalOpen(true);
     setEditingBlog(blog);
   }
 
@@ -43,14 +36,22 @@ const App = () => {
             <div>
               <button
                 onClick={openModalForNewBlog}
-                className="flex justify-center items-center bg-black text-white rounded px-4 py-2 "
+                className="flex justify-center items-center bg-black text-white rounded px-4 py-2 cursor-pointer"
               >
                 Add New Blog <IoAddCircle className="ml-[.5rem]" />
               </button>
 
               {/* Article List */}
+              <ArticleList onEdit={openModalForEdit} />
 
-              {/* {isModalOpen && <Modal></Modal>} */}
+              {isModalOpen && (
+                <Modal onClose={() => setIsModalOpen(false)}>
+                  <BlogForm
+                    existingBlog={editingBlog}
+                    onClose={() => setIsModalOpen(false)}
+                  />
+                </Modal>
+              )}
             </div>
           </section>
 
